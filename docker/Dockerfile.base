@@ -43,9 +43,61 @@ RUN --mount=type=cache,target=/var/cache/apt \
     cmake \
     git \
     libglib2.0-0 \
+    openbox \
+    net-tools \
+    novnc \
+    supervisor \
+    x11vnc \
+    nano \
+    tint2 \
+    kitty \
+    xterm \
+    libglvnd0 \ 
+    libgl1 \
+    libglx0 \
+    libegl1 \
+    libgles2 \
+    pciutils \
+    xorg \
+    xserver-xorg-video-dummy \
+    kmod \
+    openssh-server \
+    libglvnd-dev \
+    pkg-config \
+    dbus-x11 \
+    xserver-xorg-core \
+    xserver-xorg-input-evdev \
+    xserver-xorg-input-libinput \
+    xserver-xorg-legacy \
+    xserver-xorg-video-all \
     ncurses-term && \
     apt -y autoremove && apt clean autoclean && \
     rm -rf /var/lib/apt/lists/*
+
+ENV X11VNC_PASSWORD "password"
+ENV DISPLAY :1
+ENV TZ "Pacific/Auckland"
+ENV DISPLAY_CDEPTH "24"
+ENV DISPLAY_REFRESH "120"
+ENV DISPLAY_SIZEH "1920"
+ENV DISPLAY_SIZEW "1080"
+ENV DISPLAY_VIDEO_PORT "DFP"
+ENV X11VNC_PASSWORD "password"
+ENV XORG_SOCKET_DIR "/tmp/.X11-unix"
+ENV XDG_RUNTIME_DIR "/tmp/.X11-unix/run"
+ENV HOST_DBUS "false"
+ENV MODE "primary"
+ENV USER "root"
+ENV USER_PASSWORD "Fournier1"
+
+COPY xorg.conf.nvidia-headless /etc/X11/xorg.conf
+COPY templates /templates
+COPY usr /usr
+COPY novnc /app
+COPY rc.xml /home/root/.config/openbox/rc.xml
+RUN mkdir -p /home/root/.config/tint2
+RUN cp /etc/xdg/tint2/tint2rc /home/root/.config/tint2/
+RUN chmod +x /app/entrypoint.sh && chmod +x /app/script.sh
 
 # Copy the Isaac Lab directory (files to exclude are defined in .dockerignore)
 COPY ../ ${ISAACLAB_PATH}
@@ -97,3 +149,5 @@ RUN echo "export ISAACLAB_PATH=${ISAACLAB_PATH}" >> ${HOME}/.bashrc && \
 # make working directory as the Isaac Lab directory
 # this is the default directory when the container is run
 WORKDIR ${ISAACLAB_PATH}
+
+CMD ["/app/entrypoint.sh"]
