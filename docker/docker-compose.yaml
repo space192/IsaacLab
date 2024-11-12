@@ -5,31 +5,31 @@
 x-default-isaac-lab-volumes: &default-isaac-lab-volumes
   # These volumes follow from this page
   # https://docs.omniverse.nvidia.com/app_isaacsim/app_isaacsim/install_faq.html#save-isaac-sim-configs-on-local-disk
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-cache-kit
     target: ${DOCKER_ISAACSIM_ROOT_PATH}/kit/cache
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-cache-ov
     target: ${DOCKER_USER_HOME}/.cache/ov
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-cache-pip
     target: ${DOCKER_USER_HOME}/.cache/pip
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-cache-gl
     target: ${DOCKER_USER_HOME}/.cache/nvidia/GLCache
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-cache-compute
     target: ${DOCKER_USER_HOME}/.nv/ComputeCache
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-logs
     target: ${DOCKER_USER_HOME}/.nvidia-omniverse/logs
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-carb-logs
     target: ${DOCKER_ISAACSIM_ROOT_PATH}/kit/logs/Kit/Isaac-Sim
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-data
     target: ${DOCKER_USER_HOME}/.local/share/ov/data
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-docs
     target: ${DOCKER_USER_HOME}/Documents
     # This overlay allows changes on the local files to
@@ -48,13 +48,13 @@ x-default-isaac-lab-volumes: &default-isaac-lab-volumes
     #    on the host machine
     # 2. Preserve the artifacts in persistent volumes for later copying
     #    to the host machine
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-lab-docs
     target: ${DOCKER_ISAACLAB_PATH}/docs/_build
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-lab-logs
     target: ${DOCKER_ISAACLAB_PATH}/logs
-  - type: volume
+  - type: bind
     source: /mnt/user/appdata/Isaac/isaac-lab-data
     target: ${DOCKER_ISAACLAB_PATH}/data_storage
 
