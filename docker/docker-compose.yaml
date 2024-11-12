@@ -6,31 +6,31 @@ x-default-isaac-lab-volumes: &default-isaac-lab-volumes
   # These volumes follow from this page
   # https://docs.omniverse.nvidia.com/app_isaacsim/app_isaacsim/install_faq.html#save-isaac-sim-configs-on-local-disk
   - type: volume
-    source: isaac-cache-kit
+    source: /mnt/user/appdata/Isaac/isaac-cache-kit
     target: ${DOCKER_ISAACSIM_ROOT_PATH}/kit/cache
   - type: volume
-    source: isaac-cache-ov
+    source: /mnt/user/appdata/Isaac/isaac-cache-ov
     target: ${DOCKER_USER_HOME}/.cache/ov
   - type: volume
-    source: isaac-cache-pip
+    source: /mnt/user/appdata/Isaac/isaac-cache-pip
     target: ${DOCKER_USER_HOME}/.cache/pip
   - type: volume
-    source: isaac-cache-gl
+    source: /mnt/user/appdata/Isaac/isaac-cache-gl
     target: ${DOCKER_USER_HOME}/.cache/nvidia/GLCache
   - type: volume
-    source: isaac-cache-compute
+    source: /mnt/user/appdata/Isaac/isaac-cache-compute
     target: ${DOCKER_USER_HOME}/.nv/ComputeCache
   - type: volume
-    source: isaac-logs
+    source: /mnt/user/appdata/Isaac/isaac-logs
     target: ${DOCKER_USER_HOME}/.nvidia-omniverse/logs
   - type: volume
-    source: isaac-carb-logs
+    source: /mnt/user/appdata/Isaac/isaac-carb-logs
     target: ${DOCKER_ISAACSIM_ROOT_PATH}/kit/logs/Kit/Isaac-Sim
   - type: volume
-    source: isaac-data
+    source: /mnt/user/appdata/Isaac/isaac-data
     target: ${DOCKER_USER_HOME}/.local/share/ov/data
   - type: volume
-    source: isaac-docs
+    source: /mnt/user/appdata/Isaac/isaac-docs
     target: ${DOCKER_USER_HOME}/Documents
     # This overlay allows changes on the local files to
     # be reflected within the container immediately
@@ -49,13 +49,13 @@ x-default-isaac-lab-volumes: &default-isaac-lab-volumes
     # 2. Preserve the artifacts in persistent volumes for later copying
     #    to the host machine
   - type: volume
-    source: isaac-lab-docs
+    source: /mnt/user/appdata/Isaac/isaac-lab-docs
     target: ${DOCKER_ISAACLAB_PATH}/docs/_build
   - type: volume
-    source: isaac-lab-logs
+    source: /mnt/user/appdata/Isaac/isaac-lab-logs
     target: ${DOCKER_ISAACLAB_PATH}/logs
   - type: volume
-    source: isaac-lab-data
+    source: /mnt/user/appdata/Isaac/isaac-lab-data
     target: ${DOCKER_ISAACLAB_PATH}/data_storage
 
 x-default-isaac-lab-environment: &default-isaac-lab-environment
@@ -68,12 +68,12 @@ x-default-isaac-lab-deploy: &default-isaac-lab-deploy
       devices:
         - driver: nvidia
           count: all
-          capabilities: [ gpu ]
+          capabilities: [gpu]
 
 services:
   # This service is the base Isaac Lab image
   isaac-lab-base:
-    profiles: [ "base" ]
+    profiles: ["base"]
     env_file: .env.base
     build:
       context: ../
@@ -98,7 +98,7 @@ services:
   # This service adds a ROS2 Humble
   # installation on top of the base image
   isaac-lab-ros2:
-    profiles: [ "ros2" ]
+    profiles: ["ros2"]
     env_file:
       - .env.base
       - .env.ros2
@@ -120,19 +120,3 @@ services:
     entrypoint: bash
     stdin_open: true
     tty: true
-
-volumes:
-  # isaac-sim
-  isaac-cache-kit:
-  isaac-cache-ov:
-  isaac-cache-pip:
-  isaac-cache-gl:
-  isaac-cache-compute:
-  isaac-logs:
-  isaac-carb-logs:
-  isaac-data:
-  isaac-docs:
-  # isaac-lab
-  isaac-lab-docs:
-  isaac-lab-logs:
-  isaac-lab-data:
