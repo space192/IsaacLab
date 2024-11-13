@@ -77,7 +77,7 @@ x-default-isaac-lab-deploy: &default-isaac-lab-deploy
           device_ids:
             - GPU-38dec081-9601-f6ca-b0fa-28409b1b1c12
             - GPU-25cf053e-194f-6407-8122-5c2c2b3afcdf
-          capabilities: [all]
+          capabilities: [gpu]
 
 services:
   # This service is the base Isaac Lab image
