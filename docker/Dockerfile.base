@@ -80,7 +80,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     xcvt \
     ncurses-term && \
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/chrome.deb && \
-    apt install /tmp/chrome.deb &&\
+    apt install /tmp/chrome.deb -y &&\
     rm -rf /tmp/chrome.deb &&\
     apt install -y software-properties-common apt-transport-https wget && \
     wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - && \
