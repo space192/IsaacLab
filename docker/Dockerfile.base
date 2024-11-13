@@ -117,6 +117,7 @@ ENV HOST_DBUS "false"
 ENV MODE "primary"
 ENV USER "root"
 ENV USER_PASSWORD "Fournier1"
+ENV USER_HOME="/root"
 
 # Copy the Isaac Lab directory (files to exclude are defined in .dockerignore)
 COPY ../ ${ISAACLAB_PATH}
