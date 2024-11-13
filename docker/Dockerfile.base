@@ -183,7 +183,7 @@ RUN mkdir -p /root/.config/tint2  && cp /etc/xdg/tint2/tint2rc /root/.config/tin
     chmod +x /app/entrypoint.sh && chmod +x /app/script.sh
 
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/chrome.deb && \
-    apt update && apt install /tmp/chrome.deb -y && && rm -rf \
+    apt update && apt install /tmp/chrome.deb -y && rm -rf \
     /var/lib/apt/lists/* \
     /var/tmp/* \
     /tmp/*
