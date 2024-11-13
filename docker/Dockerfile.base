@@ -51,7 +51,6 @@ RUN --mount=type=cache,target=/var/cache/apt \
     supervisor \
     x11vnc \
     nano \
-    google-chrome-stable \
     tint2 \
     kitty \
     xterm \
@@ -80,6 +79,14 @@ RUN --mount=type=cache,target=/var/cache/apt \
     xserver-xorg-video-all \
     xcvt \
     ncurses-term && \
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/chrome.deb && \
+    apt install /tmp/chrome.deb &&\
+    rm -rf /tmp/chrome.deb &&\
+    apt install -y software-properties-common apt-transport-https wget && \
+    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - && \
+    add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" && \
+    apt update && \
+    apt install -y code && \
     sed -i '$ s/$/ --no-sandbox/' /usr/bin/google-chrome && \
     apt -y autoremove && apt clean autoclean && \
     rm -rf /var/lib/apt/lists/*
@@ -190,12 +197,3 @@ RUN mkdir -p /root/.config/tint2  && cp /etc/xdg/tint2/tint2rc /root/.config/tin
 #     /var/lib/apt/lists/* \
 #     /var/tmp/* \
 #     /tmp/* && && sed -i '$ s/$/ --no-sandbox/' /usr/bin/google-chrome
-
-
-RUN apt update && \
-    apt install -y software-properties-common apt-transport-https wget && \
-    wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - && \
-    add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" && \
-    apt update && \
-    apt install -y code && \
-    rm -rf /var/lib/apt/lists/*
