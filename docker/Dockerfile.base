@@ -69,6 +69,10 @@ RUN --mount=type=cache,target=/var/cache/apt \
     pkg-config \
     dbus-x11 \
     xserver-xorg-core \
+    libnss3 \
+    libfuse2 \
+    libasound2 \
+    xdg-utils \
     xserver-xorg-input-evdev \
     xserver-xorg-input-libinput \
     xserver-xorg-legacy \
@@ -178,4 +182,4 @@ COPY docker/rc.xml /root/.config/openbox/rc.xml
 RUN mkdir -p /root/.config/tint2  && cp /etc/xdg/tint2/tint2rc /root/.config/tint2/ &&\
     chmod +x /app/entrypoint.sh && chmod +x /app/script.sh
 
-CMD ["/app/entrypoint.sh"]
+# CMD ["/app/entrypoint.sh"]

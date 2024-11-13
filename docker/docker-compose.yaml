@@ -74,8 +74,10 @@ x-default-isaac-lab-deploy: &default-isaac-lab-deploy
     reservations:
       devices:
         - driver: nvidia
-          count: all
-          capabilities: [gpu]
+          device_ids:
+            - GPU-38dec081-9601-f6ca-b0fa-28409b1b1c12
+            - GPU-25cf053e-194f-6407-8122-5c2c2b3afcdf
+          capabilities: [all]
 
 services:
   # This service is the base Isaac Lab image
@@ -95,7 +97,9 @@ services:
     container_name: isaac-lab-base
     environment: *default-isaac-lab-environment
     volumes: *default-isaac-lab-volumes
-    network_mode: host
+    network_mode: bridge
+    ports:
+      - 3009:3009
     ulimits:
       nofile:
         soft: 1024
@@ -115,6 +119,9 @@ services:
       - /dev/uinput
     device_cgroup_rules:
       - "c 13:* rmw"
+    labels:
+      - net.unraid.docker.webui=http://[IP]:[PORT:3009]
+      - net.unraid.docker.icon=https://www.nesabamedia.com/wp-content/uploads/2023/02/NVIDIA-Omniverse-logo.png
     # This is the entrypoint for the container
     entrypoint: bash
     command: [/app/entrypoint.sh]
@@ -140,9 +147,30 @@ services:
     container_name: isaac-lab-ros2
     environment: *default-isaac-lab-environment
     volumes: *default-isaac-lab-volumes
-    network_mode: host
+    network_mode: bridge
+    ports:
+      - 3009:3009
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 524288
+    ipc: host
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_NICE
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
+    shm_size: 2G
     deploy: *default-isaac-lab-deploy
+    device_cgroup_rules:
+      - "c 13:* rmw"
+    labels:
+      - net.unraid.docker.webui=http://[IP]:[PORT:3009]
+      - net.unraid.docker.icon=https://www.nesabamedia.com/wp-content/uploads/2023/02/NVIDIA-Omniverse-logo.png
     # This is the entrypoint for the container
     entrypoint: bash
+    command: [/app/entrypoint.sh]
     stdin_open: true
     tty: true
