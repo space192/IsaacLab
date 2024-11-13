@@ -116,7 +116,8 @@ services:
     device_cgroup_rules:
       - "c 13:* rmw"
     # This is the entrypoint for the container
-    entrypoint: bash
+    # entrypoint: bash
+    command: [/app/entrypoint.sh]
     stdin_open: true
     tty: true
 
