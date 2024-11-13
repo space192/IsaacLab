@@ -46,6 +46,8 @@ RUN --mount=type=cache,target=/var/cache/apt \
     openbox \
     net-tools \
     novnc \
+    htop \
+    nvtop \
     supervisor \
     x11vnc \
     nano \
@@ -76,13 +78,37 @@ RUN --mount=type=cache,target=/var/cache/apt \
     apt -y autoremove && apt clean autoclean && \
     rm -rf /var/lib/apt/lists/*
 
+
+COPY --from=lizardbyte/sunshine:v2024.903.123219-debian-bookworm /sunshine.deb /usr/src/sunshine.deb
+RUN \
+    echo "**** Update apt database ****" \
+    && apt-get update \
+    && \
+    echo "**** Install Sunshine requirements ****" \
+    && apt-get install -y \
+    va-driver-all \
+    && \
+    echo "**** Install Sunshine ****" \
+    && apt-get install -y \
+    /usr/src/sunshine.deb \
+    && \
+    echo "**** Section cleanup ****" \
+    && apt-get clean autoclean -y \
+    && apt-get autoremove -y \
+    && rm -rf \
+    /var/lib/apt/lists/* \
+    /var/tmp/* \
+    /tmp/* \
+    && \
+    echo
+
 ENV X11VNC_PASSWORD "password"
 ENV DISPLAY :1
 ENV TZ "Pacific/Auckland"
 ENV DISPLAY_CDEPTH "24"
 ENV DISPLAY_REFRESH "120"
-ENV DISPLAY_SIZEH "1920"
-ENV DISPLAY_SIZEW "1080"
+ENV DISPLAY_SIZEH "1080"
+ENV DISPLAY_SIZEW "1920"
 ENV DISPLAY_VIDEO_PORT "DFP"
 ENV X11VNC_PASSWORD "password"
 ENV XORG_SOCKET_DIR "/tmp/.X11-unix"

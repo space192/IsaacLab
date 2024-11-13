@@ -57,6 +57,13 @@ x-default-isaac-lab-volumes: &default-isaac-lab-volumes
   - type: bind
     source: /mnt/user/appdata/Isaac/isaac-lab-data
     target: ${DOCKER_ISAACLAB_PATH}/data_storage
+  - type: bind
+    source: /tmp/.X11-unix/
+    target: /tmp/.X11-unix/
+    read_only: true
+  - type: bind
+    source: /tmp/tmp/pulse/
+    target: /tmp/tmp/pulse/
 
 x-default-isaac-lab-environment: &default-isaac-lab-environment
   - ISAACSIM_PATH=${DOCKER_ISAACLAB_PATH}/_isaac_sim
@@ -89,7 +96,25 @@ services:
     environment: *default-isaac-lab-environment
     volumes: *default-isaac-lab-volumes
     network_mode: host
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 524288
+    ipc: host
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_NICE
+    security_opt:
+      - seccomp:unconfined
+      - apparmor:unconfined
+    shm_size: 2G
     deploy: *default-isaac-lab-deploy
+    devices:
+      - /dev/fuse
+      - /dev/uinput
+    device_cgroup_rules:
+      - "c 13:* rmw"
     # This is the entrypoint for the container
     entrypoint: bash
     stdin_open: true
