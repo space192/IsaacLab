@@ -51,6 +51,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     supervisor \
     x11vnc \
     nano \
+    google-chrome-stable \
     tint2 \
     kitty \
     xterm \
@@ -79,6 +80,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     xserver-xorg-video-all \
     xcvt \
     ncurses-term && \
+    sed -i '$ s/$/ --no-sandbox/' /usr/bin/google-chrome && \
     apt -y autoremove && apt clean autoclean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -183,11 +185,11 @@ COPY docker/rc.xml /root/.config/openbox/rc.xml
 RUN mkdir -p /root/.config/tint2  && cp /etc/xdg/tint2/tint2rc /root/.config/tint2/ &&\
     chmod +x /app/entrypoint.sh && chmod +x /app/script.sh
 
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/chrome.deb && \
-    apt update && apt install /tmp/chrome.deb -y && rm -rf \
-    /var/lib/apt/lists/* \
-    /var/tmp/* \
-    /tmp/*
+# RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/chrome.deb && \
+#     apt update && apt install /tmp/chrome.deb -y && rm -rf \
+#     /var/lib/apt/lists/* \
+#     /var/tmp/* \
+#     /tmp/* && && sed -i '$ s/$/ --no-sandbox/' /usr/bin/google-chrome
 
 
 RUN apt update && \
@@ -196,4 +198,4 @@ RUN apt update && \
     add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" && \
     apt update && \
     apt install -y code && \
-    rm -rf /var/lib/apt/lists/* && sed -i '$ s/$/ --no-sandbox/' /usr/bin/google-chrome
+    rm -rf /var/lib/apt/lists/*

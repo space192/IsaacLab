@@ -449,7 +449,7 @@ print_header "Configure Sunshine"
 if ([ "${MODE}" != "s" ] && [ "${MODE}" != "secondary" ]); then
     if [ "${ENABLE_SUNSHINE:-}" = "true" ]; then
         print_step_header "Enable Sunshine server"
-        sed -i 's|^autostart.*=.*$|autostart=true|' /etc/supervisor.d/sunshine.conf
+        sed -i 's|^autostart.*=.*$|autostart=true|' /app/conf.d/sunshine.conf
     else
         print_step_header "Disable Sunshine server"
     fi
