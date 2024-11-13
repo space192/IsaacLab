@@ -52,6 +52,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     tint2 \
     kitty \
     xterm \
+    wget \
     libglvnd0 \ 
     libgl1 \
     libglx0 \
@@ -70,6 +71,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     xserver-xorg-input-libinput \
     xserver-xorg-legacy \
     xserver-xorg-video-all \
+    xcvt \
     ncurses-term && \
     apt -y autoremove && apt clean autoclean && \
     rm -rf /var/lib/apt/lists/*
@@ -89,14 +91,6 @@ ENV HOST_DBUS "false"
 ENV MODE "primary"
 ENV USER "root"
 ENV USER_PASSWORD "Fournier1"
-
-COPY docker/xorg.conf.nvidia-headless /etc/X11/xorg.conf
-COPY docker/templates /templates
-COPY docker/usr /usr
-COPY docker/novnc /app
-COPY docker/rc.xml /root/.config/openbox/rc.xml
-RUN mkdir -p /root/.config/tint2  && cp /etc/xdg/tint2/tint2rc /root/.config/tint2/ &&\
-    chmod +x /app/entrypoint.sh && chmod +x /app/script.sh
 
 # Copy the Isaac Lab directory (files to exclude are defined in .dockerignore)
 COPY ../ ${ISAACLAB_PATH}
@@ -148,5 +142,13 @@ RUN echo "export ISAACLAB_PATH=${ISAACLAB_PATH}" >> ${HOME}/.bashrc && \
 # make working directory as the Isaac Lab directory
 # this is the default directory when the container is run
 WORKDIR ${ISAACLAB_PATH}
+
+COPY docker/xorg.conf.nvidia-headless /etc/X11/xorg.conf
+COPY docker/templates /templates
+COPY docker/usr /usr
+COPY docker/novnc /app
+COPY docker/rc.xml /root/.config/openbox/rc.xml
+RUN mkdir -p /root/.config/tint2  && cp /etc/xdg/tint2/tint2rc /root/.config/tint2/ &&\
+    chmod +x /app/entrypoint.sh && chmod +x /app/script.sh
 
 CMD ["/app/entrypoint.sh"]
