@@ -117,6 +117,7 @@ services:
     devices:
       - /dev/fuse
       - /dev/uinput
+      - /dev/dri
     device_cgroup_rules:
       - "c 13:* rmw"
     labels:

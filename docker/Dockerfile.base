@@ -83,7 +83,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     rm -rf /var/lib/apt/lists/*
 
 
-COPY --from=lizardbyte/sunshine:v2024.903.123219-debian-bookworm /sunshine.deb /usr/src/sunshine.deb
+COPY --from=lizardbyte/sunshine:v2024.1109.210203-ubuntu-22.04 /sunshine.deb /usr/src/sunshine.deb
 RUN \
     echo "**** Update apt database ****" \
     && apt-get update \
@@ -182,4 +182,9 @@ COPY docker/rc.xml /root/.config/openbox/rc.xml
 RUN mkdir -p /root/.config/tint2  && cp /etc/xdg/tint2/tint2rc /root/.config/tint2/ &&\
     chmod +x /app/entrypoint.sh && chmod +x /app/script.sh
 
-# CMD ["/app/entrypoint.sh"]
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/chrome.deb && \
+    apt update && apt install /tmp/chrome.deb -y && && rm -rf \
+    /var/lib/apt/lists/* \
+    /var/tmp/* \
+    /tmp/*
+
