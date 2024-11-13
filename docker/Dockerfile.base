@@ -129,7 +129,7 @@ ENV XDG_RUNTIME_DIR "/tmp/.X11-unix/run"
 ENV HOST_DBUS "false"
 ENV MODE "primary"
 ENV USER "root"
-ENV ENABLE_SUNSHINE "true"
+ENV ENABLE_SUNSHINE "false"
 ENV USER_PASSWORD "Fournier1"
 ENV USER_HOME="/root"
 
@@ -184,6 +184,11 @@ RUN echo "export ISAACLAB_PATH=${ISAACLAB_PATH}" >> ${HOME}/.bashrc && \
 # this is the default directory when the container is run
 WORKDIR ${ISAACLAB_PATH}
 
+
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#Port 22/Port 25/' /etc/ssh/sshd_config &&\
+    mkdir -p /run/sshd && ssh-keygen -A
+
 COPY docker/xorg.conf.nvidia-headless /etc/X11/xorg.conf
 COPY docker/templates /templates
 COPY docker/usr /usr
@@ -191,9 +196,3 @@ COPY docker/novnc /app
 COPY docker/rc.xml /root/.config/openbox/rc.xml
 RUN mkdir -p /root/.config/tint2  && cp /etc/xdg/tint2/tint2rc /root/.config/tint2/ &&\
     chmod +x /app/entrypoint.sh && chmod +x /app/script.sh
-
-# RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/chrome.deb && \
-#     apt update && apt install /tmp/chrome.deb -y && rm -rf \
-#     /var/lib/apt/lists/* \
-#     /var/tmp/* \
-#     /tmp/* && && sed -i '$ s/$/ --no-sandbox/' /usr/bin/google-chrome
