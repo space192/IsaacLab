@@ -87,7 +87,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
     add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main" && \
     apt update && \
     apt install -y code && \
-    sed -i '$ s/$/ --no-sandbox/' /usr/bin/google-chrome && \
+    # sed -i '$ s/$/ --no-sandbox/' /usr/bin/google-chrome && \
     apt -y autoremove && apt clean autoclean && \
     rm -rf /var/lib/apt/lists/*
 
