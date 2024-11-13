@@ -121,7 +121,7 @@ services:
     device_cgroup_rules:
       - "c 13:* rmw"
     labels:
-      - net.unraid.docker.webui=http://[IP]:[PORT:3009]
+      - net.unraid.docker.webui=http://[IP]:[PORT:3009]/vnc.html
       - net.unraid.docker.icon=https://www.nesabamedia.com/wp-content/uploads/2023/02/NVIDIA-Omniverse-logo.png
     # This is the entrypoint for the container
     entrypoint: bash
