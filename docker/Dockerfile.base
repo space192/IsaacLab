@@ -49,6 +49,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     htop \
     nvtop \
     supervisor \
+    python3-pip \
     x11vnc \
     nano \
     tint2 \
