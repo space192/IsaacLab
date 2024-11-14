@@ -407,27 +407,24 @@ function configure_nvidia_x_server {
     bus_id=PCI:$((16#${ARR_ID[1]})):$((16#${ARR_ID[2]})):$((16#${ARR_ID[3]}))
     print_step_header "Configuring X11 with PCI bus ID: '${bus_id}'"
     export MODELINE=$(cvt -r "${DISPLAY_SIZEW}" "${DISPLAY_SIZEH}" "${DISPLAY_REFRESH}" | sed -n 2p)
-    
-    
     print_step_header "Writing X11 config with ${MODELINE}"
     connected_monitor="--use-display-device=None"
     if [[ "X${DISPLAY_VIDEO_PORT:-}" != "X" ]]; then
         connected_monitor="--connected-monitor=${DISPLAY_VIDEO_PORT:?}"
     fi
-    
-    
-    nvidia-xconfig --virtual="${DISPLAY_SIZEW:?}x${DISPLAY_SIZEH:?}" --depth="${DISPLAY_CDEPTH:?}" --mode=$(echo "${MODELINE:?}" | awk '{print $2}' | tr -d '"') --allow-empty-initial-configuration --no-probe-all-gpus --busid="${bus_id:?}" --no-sli --no-base-mosaic --only-one-x-screen ${connected_monitor:?}
-
-
-
-
-    
-    sed -i '/Driver\s\+"nvidia"/a\    Option         "ModeValidation" "NoMaxPClkCheck, NoEdidMaxPClkCheck, NoMaxSizeCheck, NoHorizSyncCheck, NoVertRefreshCheck, NoVirtualSizeCheck, NoTotalSizeCheck, NoDualLinkDVICheck, NoDisplayPortBandwidthCheck, AllowNon3DVisionModes, AllowNonHDMI3DModes, AllowNonEdidModes, NoEdidHDMI2Check, AllowDpInterlaced"\n    Option         "HardDPMS" "False"' /etc/X11/xorg.conf
+    nvidia-xconfig --virtual="${DISPLAY_SIZEW:?}x${DISPLAY_SIZEH:?}" --depth="${DISPLAY_CDEPTH:?}" --mode=$(echo "${MODELINE:?}" | awk '{print $2}' | tr -d '"') --allow-empty-initial-configuration --no-probe-all-gpus --busid="${bus_id:?}" --no-multigpu --no-sli --no-base-mosaic --only-one-x-screen ${connected_monitor:?}
+    # Allow SteamHeadless to run with an eGPU
+    sed -i '/Driver\s\+"nvidia"/a\    Option         "AllowExternalGpus" "True"' /etc/X11/xorg.conf
+    # Configure primary GPU
+    sed -i '/Driver\s\+"nvidia"/a\    Option         "PrimaryGPU" "yes"' /etc/X11/xorg.conf
+    # Force X server to start even if no display devices are connected
+    sed -i '/Driver\s\+"nvidia"/a\    Option         "AllowEmptyInitialConfiguration"' /etc/X11/xorg.conf
+    # Disable some mode validation checks
+    sed -i '/Driver\s\+"nvidia"/a\    Option         "ModeValidation" "NoMaxPClkCheck, NoEdidMaxPClkCheck, NoMaxSizeCheck, NoHorizSyncCheck, NoVertRefreshCheck, NoVirtualSizeCheck, NoTotalSizeCheck, NoDualLinkDVICheck, NoDisplayPortBandwidthCheck, AllowNon3DVisionModes, AllowNonHDMI3DModes, AllowNonEdidModes, NoEdidHDMI2Check, AllowDpInterlaced"' /etc/X11/xorg.conf
+    # Configure the default modeline
     sed -i '/Section\s\+"Monitor"/a\    '"${MODELINE}" /etc/X11/xorg.conf
     # Prevent interference between GPUs
     echo -e "Section \"ServerFlags\"\n    Option \"AutoAddGPU\" \"false\"\nEndSection" | tee -a /etc/X11/xorg.conf > /dev/null
-    # Configure primary GPU
-    sed -i '/Driver\s\+"nvidia"/a\    Option "AllowEmptyInitialConfiguration"\n    Option "PrimaryGPU" "yes"' /usr/share/X11/xorg.conf.d/nvidia-drm-outputclass.conf 
 }
 
 # Allow anybody for running x server

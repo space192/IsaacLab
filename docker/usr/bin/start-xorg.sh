@@ -47,6 +47,7 @@ fi
     vt7 "${DISPLAY:?}" &
 xorg_pid=$!
 
+touch /tmp/.started-desktop
 
 # WAIT FOR CHILD PROCESS:
 wait "$xorg_pid"
