@@ -80,22 +80,22 @@ run_dumb_udev="false"
 if [ ! -w /sys ]; then
     # Disable supervisord script since we are not able to write to sysfs
     print_step_header "Disable udevd - /sys is mounted RO"
-    sed -i 's|^autostart.*=.*$|autostart=false|' /app/conf.d/udex.conf
+    sed -i 's|^autostart.*=.*$|autostart=false|' /app/conf.d/udev.conf
     run_dumb_udev="true"
 elif [ ! -d /run/udev ]; then
     # Disable supervisord script since we are not able to write to udev/data path
     print_step_header "Disable udevd - /run/udev does not exist"
-    sed -i 's|^autostart.*=.*$|autostart=false|' /app/conf.d/udex.conf
+    sed -i 's|^autostart.*=.*$|autostart=false|' /app/conf.d/udev.conf
     run_dumb_udev="true"
 elif [ ! -w /run/udev ]; then
     # Disable supervisord script since we are not able to write to udev/data path
     print_step_header "Disable udevd - /run/udev is mounted RO"
-    sed -i 's|^autostart.*=.*$|autostart=false|' /app/conf.d/udex.conf
+    sed -i 's|^autostart.*=.*$|autostart=false|' /app/conf.d/udev.conf
     run_dumb_udev="false"
 elif udevadm trigger &> /dev/null; then
     print_step_header "Configure container to run udev management"
     # Enable supervisord script
-    sed -i 's|^autostart.*=.*$|autostart=true|' /app/conf.d/udex.conf
+    sed -i 's|^autostart.*=.*$|autostart=true|' /app/conf.d/udev.conf
     # Configure udev permissions
     if [[ -f /lib/udev/rules.d/60-steam-input.rules ]]; then
         sed -i 's/MODE="0660"/MODE="0666"/' /lib/udev/rules.d/60-steam-input.rules
@@ -104,15 +104,15 @@ elif udevadm trigger &> /dev/null; then
 else
     # Disable supervisord script since we are not able to execute "udevadm trigger"
     print_step_header "Disable udev service due to privilege restrictions"
-    sed -i 's|^autostart.*=.*$|autostart=false|' /app/conf.d/udex.conf
+    sed -i 's|^autostart.*=.*$|autostart=false|' /app/conf.d/udev.conf
     run_dumb_udev="true"
 fi
 
 if [ "${run_dumb_udev}" = "true" ]; then
     # Enable dumb-udev instead of udevd
     print_step_header "Enable dumb-udev service"
-    sed -i 's|^command.*=.*$|command=start-dumb-udev.sh|' /app/conf.d/udex.conf
-    sed -i 's|^autostart.*=.*$|autostart=true|' /app/conf.d/udex.conf
+    sed -i 's|^command.*=.*$|command=start-dumb-udev.sh|' /app/conf.d/udev.conf
+    sed -i 's|^autostart.*=.*$|autostart=true|' /app/conf.d/udev.conf
 fi
 
 
