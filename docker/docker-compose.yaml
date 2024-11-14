@@ -60,13 +60,12 @@ x-default-isaac-lab-volumes: &default-isaac-lab-volumes
   - type: bind
     source: /mnt/user/appdata/Isaac/isaac-lab-data
     target: ${DOCKER_ISAACLAB_PATH}/data_storage
-  # - type: bind
-  # source: /tmp/.X11-unix/
-  # target: /tmp/.X11-unix/
-  # read_only: true
-  # - type: bind
-  # source: /tmp/tmp/pulse/
-  # target: /tmp/tmp/pulse/
+  - type: bind
+    source: /tmp/.X11-unix/
+    target: /tmp/.X11-unix/
+  - type: bind
+    source: /tmp/tmp/pulse/
+    target: /tmp/tmp/pulse/
 
 x-default-isaac-lab-environment: &default-isaac-lab-environment
   - ISAACSIM_PATH=${DOCKER_ISAACLAB_PATH}/_isaac_sim
@@ -128,7 +127,6 @@ services:
     devices:
       - /dev/fuse
       - /dev/uinput
-      - /dev/dri
     device_cgroup_rules:
       - "c 13:* rmw"
     labels:
