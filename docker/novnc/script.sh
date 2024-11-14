@@ -412,7 +412,7 @@ function configure_nvidia_x_server {
     if [[ "X${DISPLAY_VIDEO_PORT:-}" != "X" ]]; then
         connected_monitor="--connected-monitor=${DISPLAY_VIDEO_PORT:?}"
     fi
-    nvidia-xconfig --virtual="${DISPLAY_SIZEW:?}x${DISPLAY_SIZEH:?}" --depth="${DISPLAY_CDEPTH:?}" --mode=$(echo "${MODELINE:?}" | awk '{print $2}' | tr -d '"') --allow-empty-initial-configuration --no-probe-all-gpus --busid="${bus_id:?}" --no-multigpu --no-sli --no-base-mosaic --only-one-x-screen ${connected_monitor:?}
+    nvidia-xconfig --virtual="${DISPLAY_SIZEW:?}x${DISPLAY_SIZEH:?}" --depth="${DISPLAY_CDEPTH:?}" --mode=$(echo "${MODELINE:?}" | awk '{print $2}' | tr -d '"') --allow-empty-initial-configuration --no-probe-all-gpus --busid="${bus_id:?}" --no-sli --no-base-mosaic --only-one-x-screen ${connected_monitor:?}
     # Allow SteamHeadless to run with an eGPU
     sed -i '/Driver\s\+"nvidia"/a\    Option         "AllowExternalGpus" "True"' /etc/X11/xorg.conf
     # Configure primary GPU
