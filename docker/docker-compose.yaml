@@ -71,7 +71,7 @@ x-default-isaac-lab-volumes: &default-isaac-lab-volumes
 x-default-isaac-lab-environment: &default-isaac-lab-environment
   - ISAACSIM_PATH=${DOCKER_ISAACLAB_PATH}/_isaac_sim
   - OMNI_KIT_ALLOW_ROOT=1
-  - ENABLE_SUNSHINE=true
+  - ENABLE_SUNSHINE=false
 
 x-default-isaac-lab-deploy: &default-isaac-lab-deploy
   resources:
